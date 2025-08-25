@@ -107,6 +107,31 @@
             overflow: hidden;
             /* 테이블 내용이 경계를 넘어갈 때 숨김 */
         }
+
+        /* 테이블 헤더(th)와 데이터 셀(td)의 공통 스타일을 설정합니다 */
+        th,
+        td {
+            padding: 10px;
+            /* 셀 내부에 10픽셀의 여백 추가 */
+            text-align: left;
+            /* 셀 내용을 왼쪽으로 정렬 */
+            border-bottom: 1px solid #ddd;
+            /* 셀 아래에 1픽셀 두께의 연한 회색 테두리 추가 */
+        }
+
+        /* 테이블 헤더(th)의 추가 스타일을 설정합니다 */
+        th {
+            background-color: #f8f9fa;
+            /* 헤더 배경색을 매우 연한 회색으로 설정 */
+            color: #333;
+            /* 헤더 텍스트 색상을 진한 회색으로 설정 */
+        }
+
+        /* 테이블 행(tr)에 마우스를 올렸을 때(:hover)의 스타일을 설정합니다 */
+        tr:hover {
+            background-color: #f5f5f5;
+            /* 행의 배경색을 연한 회색으로 변경 */
+        }
     </style>
 </head>
 
