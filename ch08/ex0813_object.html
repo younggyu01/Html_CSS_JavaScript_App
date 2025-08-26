@@ -72,29 +72,33 @@
 <script type="text/javascript">
     // 책 생성자 함수
     function Book(title, author, year, isbn) {
+        //property
         this.title = title;
         this.author = author;
         this.year = year;
         this.isbn = isbn;
-        
+        //메서드
         this.toString = function() {
             return "제목: " + this.title + ", 저자: " + this.author + 
                    ", 출판년도: " + this.year + ", ISBN: " + this.isbn;
         };
     }
     
-    // 도서관 객체
+    // 도서관 객체 (사용자 정의 객체 Object Literal)
     var library = {
-        books: [],
+        //property(변수) key: value (배열)
+        books: [],  //new Array()
         
-        // 책 추가
+        // 책 추가 함수 key: function() {}
         addBook: function(book) {
+            //배열에 추가
             this.books.push(book);
             this.showMessage("책이 추가되었습니다: " + book.title);
         },
         
-        // 제목으로 책 검색
+        // 제목으로 책 검색 함수 key: function() {}
         searchByTitle: function(title) {
+            //검색의 결과를 저장할 배열 변수
             var found = [];
             for(var i = 0; i < this.books.length; i++) {
                 if(this.books[i].title.toLowerCase().indexOf(title.toLowerCase()) !== -1) {
@@ -104,7 +108,7 @@
             return found;
         },
         
-        // 모든 책 목록
+        // 모든 책 목록 함수
         listAllBooks: function() {
             return this.books;
         },
@@ -146,6 +150,7 @@
     }
     
     function clearForm() {
+        //HTMLInputElement 객체의 value 속성을 초기화
         document.getElementById('title').value = '';
         document.getElementById('author').value = '';
         document.getElementById('year').value = '';
@@ -158,6 +163,8 @@
     
     function addBook() {
         var title = document.getElementById('title').value;
+        console.log(typeof document.getElementById('title'));
+        console.log(title);
         var author = document.getElementById('author').value;
         var year = parseInt(document.getElementById('year').value);
         var isbn = document.getElementById('isbn').value;
