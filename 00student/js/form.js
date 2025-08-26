@@ -117,4 +117,26 @@ function loadStudents() {
 
 function renderStudentTable(students) {
     console.log(students);
-}
+    studentTableBody.innerHTML = "";
+    // [{},{},{}] [] - students, {} - student
+    students.forEach((student) => {
+        //<tr> 엘리먼트를 생성하기 <tr><td>홍길동</td><td>aaa</td></tr>
+        const row = document.createElement("tr");
+        
+        //<tr>의 content을 동적으로 생성
+        row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.studentNumber}</td>
+                    <td>${student.detail ? student.detail.address : "-"}</td>
+                    <td>${student.detail?.phoneNumber?? "-"}</td>
+                    <td>${student.detail?.email ?? "-"}</td>
+                    <td>${student.detail?.dateOfBirth ?? "-"}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editStudent(${student.id})">수정</button>
+                        <button class="delete-btn" onclick="deleteStudent(${student.id})">삭제</button>
+                    </td>
+                `;
+        //<tbody>의 아래에 <tr>을 추가시켜 준다.
+        studentTableBody.appendChild(row);
+    });    
+}//renderStudentTable
