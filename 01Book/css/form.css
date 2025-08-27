@@ -187,3 +187,16 @@ tr:hover {
     overflow: hidden;
     /* 컨테이너 내용이 경계를 넘어갈 때 숨김 */
 }
+
+.button-group {
+    margin-top: 15px;
+    /* 위쪽 여백 */
+    display: flex;
+    /* 플렉스 레이아웃 사용 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+    flex-wrap: wrap;
+    /* 화면이 작을 때 줄바꿈 허용 */
+    gap: 10px;
+    /* 요소들 간의 간격 */
+}

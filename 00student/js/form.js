@@ -1,9 +1,13 @@
 //전역변수
 const API_BASE_URL = "http://localhost:8080";
+//현재 Update 중인 학생의 ID
+var editingStudentId = null;
 
 //DOM 엘리먼트 가져오기
 const studentForm = document.getElementById("studentForm");
 const studentTableBody = document.getElementById("studentTableBody");
+const submitButton = document.querySelector("button[type='submit']");
+const cancelButton = document.querySelector(".cancel-btn");
 
 //Document Load 이벤트 처리하기
 document.addEventListener("DOMContentLoaded", function () {
@@ -81,6 +85,73 @@ function createStudent(studentData) {
             alert(error.message);
         });
 }//createStudent
+
+//Student 삭제 함수
+function deleteStudent(studentId, studentName) {
+    if (!confirm(`이름 = ${studentName} 학생을 정말로 삭제하시겠습니까?`)) {
+        return;
+    }
+    console.log('삭제처리 ...');
+    fetch(`${API_BASE_URL}/api/students/${studentId}`, {
+        method: 'DELETE'
+    })
+        .then(async (response) => {
+            if (!response.ok) {
+                //응답 본문을 읽어서 에러 메시지 추출
+                const errorData = await response.json();
+                //status code와 message를 확인하기
+                if (response.status === 404) {
+                    //중복 오류 처리
+                    throw new Error(errorData.message || '존재하지 않는 학생입니다다.');
+                } else {
+                    //기타 오류 처리
+                    throw new Error(errorData.message || '학생 삭제에 실패했습니다.')
+                }
+            }
+            alert("학생이 성공적으로 삭제되었습니다!");
+            //목록 새로 고침
+            loadStudents();
+        })
+}//deleteStudent
+
+//학생 수정전에 데이터를 로드하는 함수
+function editStudent(studentId) {
+    fetch(`${API_BASE_URL}/api/students/${studentId}`)
+        .then(async (response) => {
+            if (!response.ok) {
+                //응답 본문을 읽어서 에러 메시지 추출
+                const errorData = await response.json();
+                //status code와 message를 확인하기
+                if (response.status === 404) {
+                    //중복 오류 처리
+                    throw new Error(errorData.message || '존재하지 않는 학생입니다.');
+                }
+            }
+            return response.json();
+        })
+        .then((student) => {
+            //Form에 데이터 채우기
+            studentForm.name.value = student.name;
+            studentForm.studentNumber.value = student.studentNumber;
+            if (student.detail) {
+                studentForm.address.value = student.detail.address;
+                studentForm.phoneNumber.value = student.detail.phoneNumber;
+                studentForm.email.value = student.detail.email;
+                studentForm.dateOfBirth.value = student.detail.dateOfBirth || '';
+            }
+
+            //수정 Mode 설정
+            editingStudentId = studentId;
+            //버튼의 타이틀을 등록 => 수정으로 변경
+            submitButton.textContent = "학생 수정";
+            //취소 버튼을 활성화
+            cancelButton.style.display = 'inline-block';
+        })
+        .catch((error) => {
+            console.log('Error : ', error);
+            alert(error.message);
+        });
+}//editStudent
 
 //입력항목의 값의 유효성을 체크하는 함수
 function validateStudent(student) {// 필수 필드 검사
@@ -175,7 +246,7 @@ function renderStudentTable(students) {
                     <td>${student.detail?.dateOfBirth ?? "-"}</td>
                     <td>
                         <button class="edit-btn" onclick="editStudent(${student.id})">수정</button>
-                        <button class="delete-btn" onclick="deleteStudent(${student.id})">삭제</button>
+                        <button class="delete-btn" onclick="deleteStudent(${student.id},'${student.name}')">삭제</button>
                     </td>
                 `;
         //<tbody>의 아래에 <tr>을 추가시켜 준다.
