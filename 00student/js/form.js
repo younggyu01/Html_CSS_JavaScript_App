@@ -40,7 +40,44 @@ studentForm.addEventListener("submit", function (event) {
     //유효한 데이터 출력하기
     console.log(studentData);
 
+    //서버로 Student 등록 요청하기
+    createStudent(studentData);
+
 }); //submit 이벤트
+
+//Student 등록 함수
+function createStudent(studentData) {
+    fetch(`${API_BASE_URL}/api/students`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(studentData)  //Object => json
+    })
+        .then(async (response) => {
+            if (!response.ok) {
+                //응답 본문을 읽어서 에러 메시지 추출
+                const errorData = await response.json();
+                //status code와 message를 확인하기
+                if (response.status === 409) {
+                    //중복 오류 처리
+                    throw new Error(errorData.message || '중복 되는 정보가 있습니다.');
+                } else {
+                    //기타 오류 처리
+                    throw new Error(errorData.message || '학생 등록에 실패했습니다.')
+                }
+            }
+            return response.json();
+        })
+        .then((result) => {
+            alert("학생이 성공적으로 등록되었습니다!");
+            studentForm.reset();
+            //목록 새로 고침
+            loadStudents();
+        })
+        .catch((error) => {
+            console.log('Error : ', error);
+            alert(error.message);
+        });
+}//createStudent
 
 //입력항목의 값의 유효성을 체크하는 함수
 function validateStudent(student) {// 필수 필드 검사
@@ -103,15 +140,15 @@ function loadStudents() {
     console.log("학생 목록 Load 중.....");
     fetch(`${API_BASE_URL}/api/students`) //Promise
         .then((response) => {
-            if (!response.ok) {
-                throw new Error("학생 목록을 불러오는데 실패했습니다!.");
-            }
+            // if (!response.ok) {
+            //     throw new Error("<<< 학생 목록을 불러오는데 실패했습니다!. ");
+            // }
             return response.json();
         })
         .then((students) => renderStudentTable(students))
         .catch((error) => {
-            console.log("Error: " + error);
-            alert("학생 목록을 불러오는데 실패했습니다!.");
+            console.log(error);
+            alert(">>> 학생 목록을 불러오는데 실패했습니다!.");
         });
 };
 
@@ -122,13 +159,13 @@ function renderStudentTable(students) {
     students.forEach((student) => {
         //<tr> 엘리먼트를 생성하기 <tr><td>홍길동</td><td>aaa</td></tr>
         const row = document.createElement("tr");
-        
+
         //<tr>의 content을 동적으로 생성
         row.innerHTML = `
                     <td>${student.name}</td>
                     <td>${student.studentNumber}</td>
                     <td>${student.detail ? student.detail.address : "-"}</td>
-                    <td>${student.detail?.phoneNumber?? "-"}</td>
+                    <td>${student.detail?.phoneNumber ?? "-"}</td>
                     <td>${student.detail?.email ?? "-"}</td>
                     <td>${student.detail?.dateOfBirth ?? "-"}</td>
                     <td>
@@ -138,5 +175,5 @@ function renderStudentTable(students) {
                 `;
         //<tbody>의 아래에 <tr>을 추가시켜 준다.
         studentTableBody.appendChild(row);
-    });    
+    });
 }//renderStudentTable
