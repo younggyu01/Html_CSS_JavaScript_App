@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리 시스템</title>
+    <link rel="stylesheet" type="text/css" href="./css/form.css" />
+</head>
+
+<body>
+    <h1>도서 관리 시스템</h1>
+
+    <div class="form-container">
+        <h2>도서 등록</h2>
+        <form id="bookForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="title">제목:</label>
+                    <input type="text" name="title" id="title" />
+                </div>
+
+                <div class="form-group">
+                    <label for="author">저자:</label>
+                    <input type="text" name="author" id="author" />
+                </div>
+
+                <div class="form-group">
+                    <label for="isbn">ISBN:</label>
+                    <input type="text" name="isbn" id="isbn" />
+                </div>
+
+                <div class="form-group">
+                    <label for="price">가격:</label>
+                    <input type="text" name="price" id="price" />
+                </div>
+
+                <div class="form-group">
+                    <label for="publishDate">출판일:</label>
+                    <input type="date" name="publishDate" id="publishDate" />
+                </div>
+
+                <button type="submit">도서 등록</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <h2>도서 리스트</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>저자</th>
+                    <th>ISBN</th>
+                    <th>가격</th>
+                    <th>출판일</th>
+                    <th>액션</th>
+                </tr>
+            </thead>
+            <tbody id="bookTableBody"></tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        //전역변수
+        const API_BASE_URL = "http://localhost:8080";
+
+        //DOM 엘리먼트 가져오기
+        const bookForm = document.getElementById("bookForm");
+        const bookTableBody = document.getElementById("bookTableBody");
+
+        //Document Load 이벤트 처리하기
+        document.addEventListener("DOMContentLoaded", function () {
+            loadBooks();
+        });
+        //BookForm 의 Submit 이벤트 처리하기
+        bookForm.addEventListener("submit", function (event) {
+            //기본으로 설정된 Event가 동작하지 않도록 하기 위함
+            event.preventDefault();
+            console.log("Form 이 체출 되었음....")
+
+            //FormData 객체생성 <form>엘리먼트를 객체로 변환
+            const bookFormData = new FormData(bookForm);
+            bookFormData.forEach((value, key) => {
+                console.log(key + ' = ' + value);
+            });
+
+            //사용자 정의 Book Object Literal 객체생성 (공백 제거 trim())
+            const bookData = {
+                title: bookFormData.get("title").trim(),
+                author: bookFormData.get("author").trim(),
+                isbn: bookFormData.get("isbn").trim(),
+                price: bookFormData.get("price").trim(),
+                publishDate: bookFormData.get("publishDate").trim()
+            }
+
+        }); //submit 이벤트
+
+        //Book(도서) 목록을 Load 하는 함수
+        function loadBooks() {
+            console.log("도서 목록 Load 중.....");
+        }
+    </script>
+</body>
+
+</html>
