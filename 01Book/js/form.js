@@ -4,9 +4,13 @@ const API_BASE_URL = "http://localhost:8080";
 //DOM 엘리먼트 가져오기
 const bookForm = document.getElementById("bookForm");
 const bookTableBody = document.getElementById("bookTableBody");
+const submitButton = document.querySelector("button[type='submit']");
+const cancelButton = document.querySelector(".cancel-btn");
+const formErrorSpan = document.getElementById("formError");
 
 //Document Load 이벤트 처리하기
 document.addEventListener("DOMContentLoaded", function () {
+    //resetForm();
     loadBooks();
 });
 //BookForm 의 Submit 이벤트 처리하기
@@ -39,13 +43,52 @@ bookForm.addEventListener("submit", function (event) {
     //유효한 데이터 출력하기
     console.log(bookData);
 
-    //서버로 Book 등록 요청하기
-    createBook(bookData);
+    //현재 수정중인 도서Id가 있으면 수정처리
+    if (editingBookId) {
+        //서버로 Book 수정 요청하기
+        updateBook(editingBookId, bookData);
+    } else {
+        //서버로 Book 등록 요청하기
+        createBook(bookData);
+    }
 
 }); //submit 이벤트
 
 //Book 등록 함수
-
+function createBook(bookData) {
+    fetch(`${API_BASE_URL}/api/books`, {
+        method: "POST",
+        headers: { "Content-Type": "application.json" },
+        body: JSON.stringify(bookData) // Object -> json
+    })
+        .then(async (reponse) => {
+            if (!response.ok) {
+                //응답 본문을 읽어서 에러 메시지 추출
+                const errorData = await response.json();
+                // status code와 message를 확인하기
+                if (response.status === 409) {
+                    //중복 오류 처리
+                    throw new Error(errorData.message || '중복 되는 정보가 있습니다.');
+                } else {
+                    //기타 오류 처리
+                    throw new Error(errorData.message || '도서 등록에 실패했습니다.')
+                }
+            }
+            return response.json();
+        })
+        .then((result) => {
+            showSuccess("도서가 성공적으로 등록되었습니다!");
+            //입력 Form의 input의 값 초기화
+            bookForm.reset();
+            //resetForm();
+            //목록 새로 고침
+            loadBooks();
+        })
+        .catch((error) => {
+            console.log('Error : ', error);
+            showError(error.message);
+        });
+}// createBook
 
 //Book 삭제 함수
 
