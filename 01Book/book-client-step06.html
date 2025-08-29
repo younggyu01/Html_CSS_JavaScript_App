@@ -5,55 +5,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 관리 시스템</title>
-    <link rel="stylesheet" type="text/css" href="./css/form.css" />
+    <link rel="stylesheet" href="css/form.css">
 </head>
 
 <body>
     <h1>도서 관리 시스템</h1>
 
-    <div class="form-container">
+    <div>
         <h2>도서 등록</h2>
         <form id="bookForm">
-            <div class="form-grid">
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="title">제목:</label>
-                    <input type="text" name="title" id="title" />
+                    <label>제목:</label>
+                    <input type="text" name="title">
                 </div>
 
                 <div class="form-group">
-                    <label for="author">저자:</label>
-                    <input type="text" name="author" id="author" />
+                    <label>저자:</label>
+                    <input type="text" name="author">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ISBN:</label>
+                    <input type="text" name="isbn">
                 </div>
 
                 <div class="form-group">
-                    <label for="isbn">ISBN:</label>
-                    <input type="text" name="isbn" id="isbn" />
+                    <label>가격:</label>
+                    <input type="number" name="price">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>출판일:</label>
+                    <input type="date" name="publishDate">
                 </div>
 
                 <div class="form-group">
-                    <label for="price">가격:</label>
-                    <input type="text" name="price" id="price" />
+                    <label>언어:</label>
+                    <input type="text" name="language">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>페이지 수:</label>
+                    <input type="number" name="pageCount">
                 </div>
 
                 <div class="form-group">
-                    <label for="publishDate">출판일:</label>
-                    <input type="date" name="publishDate" id="publishDate" />
+                    <label>출판사:</label>
+                    <input type="text" name="publisher">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>에디션:</label>
+                    <input type="text" name="edition">
                 </div>
 
-                <div class="button-group">
+                <div class="form-group">
+                    <label>표지 이미지 URL:</label>
+                    <input type="url" name="coverImageUrl">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>설명:</label>
+                <textarea name="description" rows="4" cols="50"></textarea>
+            </div>
+
+            <div class="button-group">
                 <button type="submit">도서 등록</button>
                 <button type="button" class="cancel-btn" onclick="resetForm()" style="display:none">
                     취소
                 </button>
                 <span class="error-message" id="formError"></span>
-                </div>
             </div>
+
         </form>
     </div>
 
-    <div class="table-container">
-        <h2>도서 리스트</h2>
-        <table>
+    <div>
+        <h2>도서 목록</h2>
+        <div id="loadingMessage" class="loading" style="display: none;">로딩 중...</div>
+        <table id="bookTable">
             <thead>
                 <tr>
                     <th>제목</th>
@@ -61,14 +101,16 @@
                     <th>ISBN</th>
                     <th>가격</th>
                     <th>출판일</th>
+                    <th>출판사</th>
                     <th>액션</th>
                 </tr>
             </thead>
-            <tbody id="bookTableBody"></tbody>
+            <tbody id="bookTableBody">
+            </tbody>
         </table>
     </div>
 
-    <script src="./js/form.js"></script>
+    <script src="js/form.js"></script>
 </body>
 
 </html>
